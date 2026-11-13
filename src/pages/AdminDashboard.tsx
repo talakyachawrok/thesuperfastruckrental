@@ -3,6 +3,7 @@ import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import { Booking } from '../types';
 import { TrackingMilestoneModal } from '../components/bookings/TrackingMilestoneModal';
+import { api } from '../services/api';
 import { 
   ShieldCheck, 
   Users, 
@@ -31,28 +32,29 @@ export const AdminDashboard: React.FC = () => {
   const [pendingDrivers, setPendingDrivers] = useState([
     {
       id: 'p-drv-1',
-      name: 'Travis Sterling',
-      email: 'travis.sterling@logistics.com',
-      vehicle: 'Kenworth T680 (2024)',
-      dotNumber: 'USDOT-3991204',
+      name: 'Diganta Moran',
+      email: 'diganta.moran@assamfreight.demo',
+      vehicle: 'Tata Signa 4825.TK (AS-23-CD-8812)',
+      dotNumber: 'AS-23-2024-COM (Demo RTO Permit)',
       status: 'pending',
     },
     {
       id: 'p-drv-2',
-      name: 'Monique Laurent',
-      email: 'monique@laurentfreight.com',
-      vehicle: 'Volvo VNL 760 Reefer',
-      dotNumber: 'USDOT-4102948',
+      name: 'Rupam Phukan',
+      email: 'rupam.phukan@upperassamtransport.demo',
+      vehicle: 'BharatBenz 2823R (AS-06-EA-3341)',
+      dotNumber: 'AS-06-2024-COM (Demo RTO Permit)',
       status: 'pending',
     }
   ]);
 
   const handleApproveDriver = (id: string, name: string) => {
     setPendingDrivers(prev => prev.filter(d => d.id !== id));
+    api.approveDriver(id, name).catch(err => console.warn('[Admin API] approveDriver:', err.message));
     addToast({
       type: 'success',
       title: 'Carrier Approved & Verified',
-      message: `${name} has been vetted and granted CDL verified status on the marketplace.`,
+      message: `${name} has been vetted and granted verified carrier status on the marketplace (demo).`,
     });
   };
 
@@ -187,14 +189,14 @@ export const AdminDashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 rounded-3xl p-6 space-y-4">
             <h3 className="font-bold text-base text-slate-900 dark:text-white">
-              Freight Corridor Activity Breakdown
+              Assam Freight Corridor Activity Breakdown
             </h3>
             <div className="space-y-3">
               {[
-                { corridor: 'Chicago, IL ➔ Atlanta, GA', volume: '1,420 Tons', growth: '+28%', share: 85 },
-                { corridor: 'Dallas, TX ➔ Houston, TX', volume: '980 Tons', growth: '+19%', share: 65 },
-                { corridor: 'Los Angeles, CA ➔ Phoenix, AZ', volume: '840 Tons', growth: '+14%', share: 55 },
-                { corridor: 'Philadelphia, PA ➔ New York, NY', volume: '620 Tons', growth: '+34%', share: 45 },
+                { corridor: 'Tinsukia, Assam ➔ Guwahati, Assam', volume: '1,420 Tons', growth: '+28%', share: 85 },
+                { corridor: 'Dibrugarh, Assam ➔ Jorhat, Assam', volume: '980 Tons', growth: '+19%', share: 65 },
+                { corridor: 'Digboi, Assam ➔ Sivasagar, Assam', volume: '840 Tons', growth: '+14%', share: 55 },
+                { corridor: 'Guwahati, Assam ➔ Tezpur, Assam', volume: '620 Tons', growth: '+34%', share: 45 },
               ].map(item => (
                 <div key={item.corridor} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -235,7 +237,7 @@ export const AdminDashboard: React.FC = () => {
       {activeTab === 'drivers' && (
         <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 rounded-3xl p-6 space-y-4">
           <h3 className="font-bold text-base text-slate-900 dark:text-white">
-            Carrier Onboarding & DOT Compliance Reviews
+            Carrier Onboarding & Assam RTO Compliance Reviews (Demo)
           </h3>
           {pendingDrivers.length === 0 ? (
             <div className="text-center py-8 text-slate-400 text-xs">

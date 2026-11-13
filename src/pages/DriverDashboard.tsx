@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import { LoadRequest, Booking, Truck } from '../types';
+import { POPULAR_CITIES } from '../data/mockData';
 import { DriverOfferModal } from '../components/loads/DriverOfferModal';
 import { TrackingMilestoneModal } from '../components/bookings/TrackingMilestoneModal';
 import { 
@@ -37,8 +38,8 @@ export const DriverDashboard: React.FC = () => {
 
   // Return route toggle state
   const [isReturningEmpty, setIsReturningEmpty] = useState(myTruck?.returnTripMatch?.isReturningEmpty ?? true);
-  const [emptyReturnOrigin, setEmptyReturnOrigin] = useState('Chicago, IL');
-  const [emptyReturnDest, setEmptyReturnDest] = useState('Atlanta, GA');
+  const [emptyReturnOrigin, setEmptyReturnOrigin] = useState('Guwahati, Assam');
+  const [emptyReturnDest, setEmptyReturnDest] = useState('Tinsukia, Assam');
 
   // Filter loads that are open or bids_received
   const availableLoads = loads.filter(l => l.status === 'open' || l.status === 'bids_received');
@@ -53,9 +54,9 @@ export const DriverDashboard: React.FC = () => {
 
   // Modal for new truck registration
   const [showAddTruckModal, setShowAddTruckModal] = useState(false);
-  const [newTruckName, setNewTruckName] = useState('Peterbilt 579 Ultra');
-  const [newTruckModel, setNewTruckModel] = useState('579 Aero SmartHaul');
-  const [newTruckPlate, setNewTruckPlate] = useState('IL-9920-TR');
+  const [newTruckName, setNewTruckName] = useState('Tata Signa 4825.TK');
+  const [newTruckModel, setNewTruckModel] = useState('Signa 4825 Heavy Tipper');
+  const [newTruckPlate, setNewTruckPlate] = useState('AS-23-CD-8812');
   const [newTruckType, setNewTruckType] = useState<Truck['type']>('Heavy Semi-Trailer');
   const [newTruckTons, setNewTruckTons] = useState<number>(22);
   const [newTruckRate, setNewTruckRate] = useState<number>(2.50);
@@ -73,15 +74,15 @@ export const DriverDashboard: React.FC = () => {
       lengthFt: 53,
       ratePerKm: newTruckRate,
       fixedBasePrice: 450,
-      currentLocation: 'Chicago, IL',
+      currentLocation: 'Tinsukia, Assam',
       availableDate: new Date().toISOString().split('T')[0],
-      destinationsCovered: ['Atlanta, GA', 'Dallas, TX', 'Detroit, MI'],
+      destinationsCovered: ['Guwahati, Assam', 'Dibrugarh, Assam', 'Jorhat, Assam'],
       isAvailable: true,
       features: ['Air Suspension', 'GPS Telematics', 'Heavy Duty Straps'],
       image: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1000&q=80',
       driverId: user?.id || 'drv-01',
-      driverName: user?.name || 'Marcus Vance',
-      driverPhone: user?.phone || '+1 (555) 234-8891',
+      driverName: user?.name || 'Rahul Gogoi',
+      driverPhone: user?.phone || '+91 98540 12345',
       driverAvatar: user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
       driverRating: 4.95,
       driverTripsCount: 312,
@@ -110,7 +111,7 @@ export const DriverDashboard: React.FC = () => {
               </span>
               <div className="flex items-center gap-1 text-xs text-emerald-600 font-bold">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Verified CDL & FMCSA</span>
+                <span>Verified Commercial Permit (Demo)</span>
               </div>
             </div>
             <h1 className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
@@ -179,10 +180,14 @@ export const DriverDashboard: React.FC = () => {
 
         {isReturningEmpty && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <datalist id="assam-cities-list">
+              {POPULAR_CITIES.map(c => <option key={c} value={c} />)}
+            </datalist>
             <div>
               <span className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Departure (Empty Staging)</span>
               <input
                 type="text"
+                list="assam-cities-list"
                 value={emptyReturnOrigin}
                 onChange={(e) => setEmptyReturnOrigin(e.target.value)}
                 className="w-full px-3 py-2 text-xs rounded-xl bg-navy-950 border border-navy-700 text-white font-semibold"
@@ -192,6 +197,7 @@ export const DriverDashboard: React.FC = () => {
               <span className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Destination Base</span>
               <input
                 type="text"
+                list="assam-cities-list"
                 value={emptyReturnDest}
                 onChange={(e) => setEmptyReturnDest(e.target.value)}
                 className="w-full px-3 py-2 text-xs rounded-xl bg-navy-950 border border-navy-700 text-white font-semibold"

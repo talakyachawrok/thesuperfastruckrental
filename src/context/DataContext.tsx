@@ -7,6 +7,7 @@ import {
   INITIAL_BOOKINGS, 
   INITIAL_STATS 
 } from '../data/mockData';
+import { api } from '../services/api';
 import confetti from 'canvas-confetti';
 
 interface ToastMessage {
@@ -23,6 +24,8 @@ interface DataContextType {
   bookings: Booking[];
   stats: PlatformStats;
   toasts: ToastMessage[];
+  isDbConnected: boolean;
+  dbMessage: string;
   addToast: (toast: Omit<ToastMessage, 'id'>) => void;
   removeToast: (id: string) => void;
   createLoadRequest: (loadData: Omit<LoadRequest, 'id' | 'createdAt' | 'status' | 'offersCount'>) => LoadRequest;
@@ -48,6 +51,9 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isDbConnected, setIsDbConnected] = useState(false);
+  const [dbMessage, setDbMessage] = useState('Connecting to backend...');
+
   const [trucks, setTrucks] = useState<Truck[]>(() => {
     const saved = localStorage.getItem('superfast_trucks');
     return saved ? JSON.parse(saved) : INITIAL_TRUCKS;
@@ -74,6 +80,61 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+
+  // Initial Sync with MongoDB Atlas backend
+  useEffect(() => {
+    let isMounted = true;
+
+    async function syncWithBackend() {
+      try {
+        const health = await api.getHealth();
+        if (!isMounted) return;
+
+        if (health?.database?.connected) {
+          setIsDbConnected(true);
+          setDbMessage(health.database.message || 'Connected to MongoDB Atlas');
+
+          // Fetch fresh records from MongoDB Atlas
+          const [trucksRes, loadsRes, offersRes, bookingsRes, statsRes] = await Promise.allSettled([
+            api.getTrucks(),
+            api.getLoads(),
+            api.getOffers(),
+            api.getBookings(),
+            api.getAdminStats(),
+          ]);
+
+          if (trucksRes.status === 'fulfilled' && trucksRes.value?.data?.length) {
+            setTrucks(trucksRes.value.data);
+          }
+          if (loadsRes.status === 'fulfilled' && loadsRes.value?.data?.length) {
+            setLoads(loadsRes.value.data);
+          }
+          if (offersRes.status === 'fulfilled' && offersRes.value?.data?.length) {
+            setOffers(offersRes.value.data);
+          }
+          if (bookingsRes.status === 'fulfilled' && bookingsRes.value?.data?.length) {
+            setBookings(bookingsRes.value.data);
+          }
+          if (statsRes.status === 'fulfilled' && statsRes.value?.data) {
+            setStats(statsRes.value.data);
+          }
+        } else if (health?.database) {
+          setIsDbConnected(false);
+          setDbMessage(health.database.message || 'MongoDB URI pending');
+        }
+      } catch (e) {
+        if (isMounted) {
+          setIsDbConnected(false);
+          setDbMessage('Running in local offline mode');
+        }
+      }
+    }
+
+    syncWithBackend();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Persist to localStorage
   useEffect(() => {
@@ -135,6 +196,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoads(prev => [newLoad, ...prev]);
     setStats(prev => ({ ...prev, activeTrucks: prev.activeTrucks }));
 
+    // Persist to MongoDB Atlas backend
+    api.createLoad(newLoad).catch(err => {
+      console.warn('[MongoDB Sync] Load request queued locally:', err.message);
+    });
+
     addToast({
       type: 'success',
       title: 'Load Posted Successfully!',
@@ -154,6 +220,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     setOffers(prev => [newOffer, ...prev]);
+
+    // Persist to MongoDB Atlas backend
+    api.submitOffer(newOffer).catch(err => {
+      console.warn('[MongoDB Sync] Driver bid queued locally:', err.message);
+    });
 
     // Update load request offer count and status
     setLoads(prev => prev.map(l => {
@@ -270,6 +341,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       co2SavedTons: prev.co2SavedTons + 1.2,
     }));
 
+    // Persist to MongoDB Atlas backend
+    api.acceptOffer(offerId).catch(err => {
+      console.warn('[MongoDB Sync] Accept offer queued locally:', err.message);
+    });
+
     addToast({
       type: 'success',
       title: 'Booking Confirmed!',
@@ -305,8 +381,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       bookingRef: `SF-${Math.floor(1000 + Math.random() * 9000)}-${details.destinationCity.slice(0, 2).toUpperCase()}`,
       loadRequestId: `load-direct-${Date.now().toString().slice(-4)}`,
       customerId: 'usr-cust-1',
-      customerName: 'Sarah Jenkins (Apex Distribution)',
-      customerPhone: '+1 (555) 765-4321',
+      customerName: 'Priyanka Barua (Brahmaputra Tea & Trading Co.)',
+      customerPhone: '+91 94351 88990',
       driverId: truck.driverId,
       driverName: truck.driverName,
       driverPhone: truck.driverPhone,
@@ -373,6 +449,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setBookings(prev => [newBooking, ...prev]);
 
+    // Persist to MongoDB Atlas backend
+    api.createDirectBooking(truckId, details).catch(err => {
+      console.warn('[MongoDB Sync] Direct booking queued locally:', err.message);
+    });
+
     addToast({
       type: 'success',
       title: 'Truck Booked Directly!',
@@ -384,6 +465,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateBookingMilestone = (bookingId: string, nextMilestoneStep: number) => {
+    // Persist to MongoDB Atlas backend
+    api.updateBookingMilestone(bookingId, nextMilestoneStep).catch(err => {
+      console.warn('[MongoDB Sync] Milestone update queued locally:', err.message);
+    });
+
     setBookings(prev => prev.map(booking => {
       if (booking.id !== bookingId) return booking;
 
@@ -424,6 +510,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const toggleTruckAvailability = (truckId: string) => {
+    // Persist to MongoDB Atlas backend
+    api.toggleTruckAvailability(truckId).catch(err => {
+      console.warn('[MongoDB Sync] Toggle availability queued locally:', err.message);
+    });
+
     setTrucks(prev => prev.map(t => {
       if (t.id === truckId) {
         const nextAvail = !t.isAvailable;
@@ -449,6 +540,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTrucks(prev => [newTruck, ...prev]);
     setStats(prev => ({ ...prev, activeTrucks: prev.activeTrucks + 1 }));
 
+    // Persist to MongoDB Atlas backend
+    api.createTruck(truckData).catch(err => {
+      console.warn('[MongoDB Sync] Register truck queued locally:', err.message);
+    });
+
     addToast({
       type: 'success',
       title: 'Truck Registered!',
@@ -469,6 +565,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setBookings(INITIAL_BOOKINGS);
     setStats(INITIAL_STATS);
 
+    // Call backend reset
+    api.resetSeed().catch(err => {
+      console.warn('[MongoDB Sync] Reset seed queued locally:', err.message);
+    });
+
     addToast({
       type: 'info',
       title: 'Demo Data Restored',
@@ -485,6 +586,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         bookings,
         stats,
         toasts,
+        isDbConnected,
+        dbMessage,
         addToast,
         removeToast,
         createLoadRequest,

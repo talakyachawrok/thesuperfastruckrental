@@ -79,51 +79,64 @@ Over 30% of commercial trucks return empty after dropping off their outbound hau
 
 ### 6. Admin Command Center (`/admin-dashboard`)
 - High-level marketplace oversight: Gross Merchandise Value (GMV), 8% platform fee revenue, active fleets.
-- **Carrier Compliance Queue:** Review and approve pending DOT / CDL driver certifications.
-- Freight corridor volume analytics (Chicago-Atlanta, Dallas-Houston, LA-Phoenix, etc.).
+- **Carrier Compliance Queue:** Review and approve pending Assam RTO commercial transport permits (Demo).
+- Freight corridor volume analytics (Tinsukia-Guwahati, Dibrugarh-Jorhat, Digboi-Sivasagar, Guwahati-Tezpur).
 - Platform supervisor view of all live bookings and system telematics.
 
 ### 7. Authentication & 1-Click Demo (`/auth`)
 - Separate login and registration forms for Shippers and Drivers.
 - Form validation, password visibility toggle, and terms agreement.
 - **1-Click Instant Demo Evaluation Buttons:**
-  - `Shipper / Customer` (Sarah Jenkins - Apex Distribution)
-  - `Truck Driver / Fleet` (Marcus Vance - Cascadia 126 Hauler)
-  - `Logistics Admin` (Alex Mercer - HQ Dispatch)
+  - `Shipper / Customer` (Priyanka Barua - Brahmaputra Tea & Trading Co., Guwahati)
+  - `Truck Driver / Fleet` (Rahul Gogoi - Tata Signa 4825.TK Heavy Carrier, Tinsukia)
+  - `Logistics Admin` (Pankaj Hazarika - SuperFast Assam Operations HQ, Guwahati)
 
 ---
 
 ## ⚡ Quick Start & Development
 
-### 1. Install Dependencies
+### 1. Configure MongoDB Atlas (.env)
+Create or edit `.env` in the project root:
+```env
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mgsd0db.mongodb.net/superfast?retryWrites=true&w=majority
+JWT_SECRET=superfast_secure_assam_secret_key_2026
+PORT=5000
+```
+> **Note:** If `MONGODB_URI` is not yet configured, the system operates in fallback demo mode without crashing. Once your URI is pasted, the backend automatically establishes connection and auto-seeds the Assam logistics dataset.
+
+### 2. Install Dependencies
 ```bash
 npm install
 ```
 
-### 2. Start Development Server
+### 3. Start Frontend & Backend Concurrently
 ```bash
 npm run dev
 ```
-Visit `http://localhost:3000` in your browser.
+- Frontend client: `http://localhost:3000`
+- Express API server: `http://localhost:5000/api`
+- Health check: `http://localhost:5000/api/health`
 
-### 3. Build for Production
+### 4. Build for Production
 ```bash
 npm run build
 ```
-Generates an optimized static production bundle in `dist/`.
-
-### 4. Preview Production Build
-```bash
-npm run preview
-```
+Generates an optimized production bundle in `dist/`.
 
 ---
 
-## ☁️ Deployment to Vercel
-The project includes `vercel.json` configured with SPA rewrites for seamless client-side routing:
+## ☁️ Deployment to Vercel (Full-Stack)
+
+The repository includes `vercel.json` and `api/index.ts` configured for full-stack serverless deployment on Vercel:
+
 ```json
 {
+  "version": 2,
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.ts"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
@@ -131,7 +144,38 @@ The project includes `vercel.json` configured with SPA rewrites for seamless cli
   ]
 }
 ```
-Simply connect your GitHub repository to Vercel or deploy via the Vercel CLI.
+
+### Vercel Environment Variables:
+In your **Vercel Project Dashboard** ➔ **Settings** ➔ **Environment Variables**, add:
+- `MONGODB_URI`: Your MongoDB Atlas connection string.
+- `JWT_SECRET`: A secure secret string for signing JWT tokens.
+
+---
+
+## 🛠️ Backend Architecture & Endpoints
+
+- **Database Models (`server/models/`)**:
+  - `User`: Customers, Drivers, Fleet Owners, Admins with hashed passwords and roles.
+  - `Truck`: Assam-registered vehicles (`AS-23-...`), capacity specs, return-route deals.
+  - `LoadRequest`: Freight consignments with categories, weights, and urgency.
+  - `DriverOffer`: Competitive bids submitted by drivers on open corridor loads.
+  - `Booking`: Confirmed trips with 5 tracking milestones (*Confirmed ➔ Loaded ➔ In Transit ➔ Out for Delivery ➔ Delivered*).
+  - `Payment`: Escrow payment tracking records.
+  - `Notification`: User dispatch notifications.
+  - `Review`: Driver and vehicle ratings.
+
+- **API Routes (`/api`)**:
+  - `POST /api/auth/register` & `POST /api/auth/login`: Authentication.
+  - `POST /api/auth/demo/:role`: 1-click instant access (Customer, Driver, Admin).
+  - `GET /api/trucks` & `POST /api/trucks`: Fleet catalog and vehicle registration.
+  - `PATCH /api/trucks/:id/availability`: Toggle accepting loads / off duty.
+  - `GET /api/loads` & `POST /api/loads`: Cargo marketplace board.
+  - `POST /api/offers`: Submit competitive quote.
+  - `PATCH /api/offers/:id/accept`: Accept quote and create confirmed booking.
+  - `GET /api/bookings` & `POST /api/bookings/direct`: Bookings & reservations.
+  - `PATCH /api/bookings/:id/milestone`: Advance milestone step.
+  - `GET /api/admin/stats` & `GET /api/admin/pending-drivers`: Admin command center.
+  - `GET /api/health`: Database connection status and cluster diagnostics.
 
 ---
 

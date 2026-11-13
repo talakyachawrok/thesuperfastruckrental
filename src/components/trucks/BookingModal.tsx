@@ -28,7 +28,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ truck, onClose }) =>
 
   const [originCity, setOriginCity] = useState(truck.returnTripMatch?.origin || truck.currentLocation);
   const [originAddress, setOriginAddress] = useState('Central Logistics Park, Sector 4');
-  const [destinationCity, setDestinationCity] = useState(truck.returnTripMatch?.destination || (truck.destinationsCovered[0] || 'Atlanta, GA'));
+  const [destinationCity, setDestinationCity] = useState(truck.returnTripMatch?.destination || (truck.destinationsCovered[0] || 'Guwahati, Assam'));
   const [destinationAddress, setDestinationAddress] = useState('Industrial Commercial Zone, Dock 12');
   const [cargoCategory, setCargoCategory] = useState<CargoCategory>('General Merchandise');
   const [weightKg, setWeightKg] = useState<number>(Math.min(truck.capacityKg, 5000));

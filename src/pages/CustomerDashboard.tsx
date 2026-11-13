@@ -63,10 +63,10 @@ export const CustomerDashboard: React.FC = () => {
               <span className="text-[10px] uppercase font-bold tracking-wider bg-brand-500/10 text-brand-600 dark:text-brand-400 px-2 py-0.5 rounded-full">
                 Shipper Portal
               </span>
-              <span className="text-xs text-slate-400">• {user?.companyName || 'Apex Distribution'}</span>
+              <span className="text-xs text-slate-400">• {user?.companyName || 'Brahmaputra Tea & Trading Co.'}</span>
             </div>
             <h1 className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
-              Welcome back, {user?.name || 'Sarah'}
+              Welcome back, {user?.name || 'Priyanka'}
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               Manage your freight dispatch, live telematic tracking, and driver quote comparisons.

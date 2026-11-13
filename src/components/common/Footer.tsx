@@ -64,7 +64,7 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex items-center gap-1.5">
                 <Globe className="w-4 h-4 text-brand-400" />
-                <span>Nationwide Coverage</span>
+                <span>Assam & NE Corridors</span>
               </div>
             </div>
           </div>
@@ -136,7 +136,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2.5 text-sm text-slate-400">
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-brand-500" />
-                <span>1-800-SUPERFAST</span>
+                <span>+91 361 299-FAST / 1800-SUPERFAST</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-brand-500" />
@@ -144,7 +144,7 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-brand-500" />
-                <span>Chicago, IL & Nationwide</span>
+                <span>Guwahati & Tinsukia, Assam</span>
               </li>
               <li className="pt-2">
                 <button

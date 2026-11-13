@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '../types';
 import { DEMO_USERS } from '../data/mockData';
+import { api } from '../services/api';
 
 interface AuthContextType {
   user: User | null;
@@ -40,6 +41,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user]);
 
   const login = (email: string, selectedRole: UserRole): boolean => {
+    // Attempt backend login in parallel
+    api.login(email, selectedRole).catch(err => {
+      console.warn('[Auth API] Backend login queued/local:', err.message);
+    });
+
     // If email matches one of the demo users, log in as that demo user
     const matched = Object.values(DEMO_USERS).find(u => u.email.toLowerCase() === email.toLowerCase());
     if (matched) {
@@ -53,42 +59,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
       email,
       role: selectedRole,
-      phone: '+1 (555) ' + Math.floor(100 + Math.random() * 900) + '-' + Math.floor(1000 + Math.random() * 9000),
+      phone: '+91 98540 ' + Math.floor(10000 + Math.random() * 90000),
       avatar: selectedRole === 'driver' 
         ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'
         : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80',
-      companyName: selectedRole === 'customer' ? 'Shipper Logistics Co.' : 'SuperFast Express Fleet',
+      companyName: selectedRole === 'customer' ? 'Brahmaputra Freight Traders' : 'Assam SuperFast Express',
       isVerified: true,
-      city: 'Chicago, IL',
+      city: selectedRole === 'customer' ? 'Guwahati, Assam' : 'Tinsukia, Assam',
     };
     setUser(newUser);
     return true;
   };
 
   const loginAsDemo = (demoRole: UserRole) => {
+    api.demoLogin(demoRole).catch(err => {
+      console.warn('[Auth API] Demo login sync:', err.message);
+    });
     const demoUser = DEMO_USERS[demoRole];
     setUser(demoUser);
   };
 
   const register = (data: Partial<User> & { name: string; email: string; role: UserRole; phone: string }): boolean => {
+    api.register(data).catch(err => {
+      console.warn('[Auth API] Registration sync:', err.message);
+    });
+
     const newUser: User = {
       id: `usr-${Date.now().toString().slice(-5)}`,
       name: data.name,
       email: data.email,
       role: data.role,
       phone: data.phone,
-      companyName: data.companyName || (data.role === 'customer' ? 'Independent Shipper' : 'Owner Operator Fleet'),
+      companyName: data.companyName || (data.role === 'customer' ? 'Assam Tea & Goods Shipper' : 'Gogoi Logistics Partner'),
       avatar: data.avatar || (data.role === 'driver' 
         ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80'
         : 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80'),
       isVerified: data.role === 'customer',
-      city: data.city || 'Dallas, TX',
+      city: data.city || 'Tinsukia, Assam',
     };
     setUser(newUser);
     return true;
   };
 
   const logout = () => {
+    localStorage.removeItem('superfast_token');
     setUser(null);
   };
 

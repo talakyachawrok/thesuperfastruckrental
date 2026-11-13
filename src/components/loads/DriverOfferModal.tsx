@@ -30,8 +30,8 @@ export const DriverOfferModal: React.FC<DriverOfferModalProps> = ({ load, onClos
     submitDriverOffer({
       loadRequestId: load.id,
       driverId: user?.id || 'drv-01',
-      driverName: user?.name || 'Marcus Vance',
-      driverPhone: user?.phone || '+1 (555) 234-8891',
+      driverName: user?.name || 'Rahul Gogoi',
+      driverPhone: user?.phone || '+91 98540 12345',
       driverAvatar: user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
       driverRating: 4.95,
       truckId: myTruck.id,

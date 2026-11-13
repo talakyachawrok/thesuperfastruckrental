@@ -48,16 +48,16 @@ export const LoadPostingPage: React.FC = () => {
 
   // Form State
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [originCity, setOriginCity] = useState('Chicago, IL');
-  const [originAddress, setOriginAddress] = useState('2400 W Fulton St, Facility Gate 2');
-  const [destinationCity, setDestinationCity] = useState('Atlanta, GA');
-  const [destinationAddress, setDestinationAddress] = useState('1500 Southland Circle NW, Receiving Dock');
+  const [originCity, setOriginCity] = useState('Tinsukia, Assam');
+  const [originAddress, setOriginAddress] = useState('Borguri Industrial Area, Plot 14, Tinsukia');
+  const [destinationCity, setDestinationCity] = useState('Guwahati, Assam');
+  const [destinationAddress, setDestinationAddress] = useState('ISBT Transport Nagar, Betkuchi Dock 3, Guwahati');
   const [pickupDate, setPickupDate] = useState('2026-11-09');
   const [isUrgent, setIsUrgent] = useState(false);
 
   // Step 2: Cargo
   const [cargoCategory, setCargoCategory] = useState<CargoCategory>('FMCG / Packaged Goods');
-  const [goodsDescription, setGoodsDescription] = useState('18 Pallets of packaged consumer goods, stretch wrapped and labelled.');
+  const [goodsDescription, setGoodsDescription] = useState('18 Pallets of Assam CTC tea and packaged spices, shrink wrapped.');
   const [weightKg, setWeightKg] = useState<number>(12000);
   const [volumeM3, setVolumeM3] = useState<number>(55);
   const [specialRequirements, setSpecialRequirements] = useState<string[]>([
@@ -68,9 +68,9 @@ export const LoadPostingPage: React.FC = () => {
   // Step 3: Truck & Budget
   const [requiredTruckType, setRequiredTruckType] = useState<TruckType | 'Any Suitable'>('Heavy Semi-Trailer');
   const [budgetMax, setBudgetMax] = useState<number>(1950);
-  const [customerPhone, setCustomerPhone] = useState(user?.phone || '+1 (555) 765-4321');
-  const [customerEmail, setCustomerEmail] = useState(user?.email || 'sarah.jenkins@apexdemo.com');
-  const [customerName, setCustomerName] = useState(user?.name || 'Sarah Jenkins');
+  const [customerPhone, setCustomerPhone] = useState(user?.phone || '+91 94351 88990');
+  const [customerEmail, setCustomerEmail] = useState(user?.email || 'priyanka.barua@brahmaputratea.demo');
+  const [customerName, setCustomerName] = useState(user?.name || 'Priyanka Barua');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 

@@ -170,11 +170,15 @@ export const TruckListingPage: React.FC = () => {
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="e.g. Chicago, Atlanta, Dallas..."
+                list="assam-cities-filter"
+                placeholder="e.g. Tinsukia, Guwahati, Dibrugarh, Jorhat..."
                 value={searchCity}
                 onChange={(e) => setSearchCity(e.target.value)}
                 className="w-full pl-8 pr-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-slate-50 dark:bg-navy-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
+              <datalist id="assam-cities-filter">
+                {POPULAR_CITIES.map(c => <option key={c} value={c} />)}
+              </datalist>
             </div>
           </div>
 

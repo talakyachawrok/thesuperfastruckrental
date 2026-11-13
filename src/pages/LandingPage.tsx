@@ -30,8 +30,8 @@ export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   // Search widget state
-  const [origin, setOrigin] = useState('Chicago, IL');
-  const [destination, setDestination] = useState('Atlanta, GA');
+  const [origin, setOrigin] = useState('Tinsukia, Assam');
+  const [destination, setDestination] = useState('Guwahati, Assam');
   const [date, setDate] = useState('2026-11-08');
   const [truckType, setTruckType] = useState('All Vehicle Types');
 
@@ -295,21 +295,21 @@ export const LandingPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
-                      CHI
+                      TIN
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-white">Chicago, IL</span>
+                      <span className="text-xs font-bold text-white">Tinsukia, Assam</span>
                       <p className="text-[10px] text-slate-400">Empty Return</p>
                     </div>
                   </div>
                   <ArrowRight className="w-4 h-4 text-slate-500" />
                   <div className="flex items-center gap-2 text-right">
                     <div>
-                      <span className="text-xs font-bold text-white">Atlanta, GA</span>
+                      <span className="text-xs font-bold text-white">Guwahati, Assam</span>
                       <p className="text-[10px] text-slate-400">Destination</p>
                     </div>
                     <div className="w-8 h-8 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold text-xs">
-                      ATL
+                      GAU
                     </div>
                   </div>
                 </div>
@@ -637,17 +637,17 @@ export const LandingPage: React.FC = () => {
               {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400" />)}
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 italic leading-relaxed">
-              "We ship 15 tons of consumer packaged goods weekly between Chicago and Atlanta. By tapping into SuperFast return trucks, our freight expenditure dropped by $3,200 per month."
+              "We ship 15 tons of premium Assam CTC tea weekly between Tinsukia and Guwahati. By tapping into SuperFast return trucks, our freight expenditure dropped by $3,200 per month."
             </p>
             <div className="flex items-center gap-3 pt-2 border-t border-slate-100 dark:border-navy-800">
               <img
                 src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80"
-                alt="Sarah J"
+                alt="Priyanka Barua"
                 className="w-9 h-9 rounded-full object-cover"
               />
               <div>
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Sarah Jenkins</h4>
-                <p className="text-[10px] text-slate-400">Logistics Director, Apex Distribution</p>
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Priyanka Barua</h4>
+                <p className="text-[10px] text-slate-400">Supply Chain Lead, Brahmaputra Tea & Trading, Guwahati</p>
               </div>
             </div>
           </div>
@@ -657,17 +657,17 @@ export const LandingPage: React.FC = () => {
               {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400" />)}
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 italic leading-relaxed">
-              "As an owner-operator with a 53ft reefer, driving home empty was killing my margins. Now I just broadcast my return schedule on SuperFast and get matched within 20 minutes."
+              "As an owner-operator running between Dibrugarh and Guwahati along NH-715, driving back empty was killing my margins. Now I just broadcast my return schedule on SuperFast and get matched within 20 minutes."
             </p>
             <div className="flex items-center gap-3 pt-2 border-t border-slate-100 dark:border-navy-800">
               <img
                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
-                alt="Marcus Vance"
+                alt="Rahul Gogoi"
                 className="w-9 h-9 rounded-full object-cover"
               />
               <div>
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Marcus Vance</h4>
-                <p className="text-[10px] text-slate-400">Fleet Owner, Vance Heavy Haul LLC</p>
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Rahul Gogoi</h4>
+                <p className="text-[10px] text-slate-400">Fleet Owner, Gogoi Heavy Haul, Tinsukia</p>
               </div>
             </div>
           </div>
@@ -677,17 +677,17 @@ export const LandingPage: React.FC = () => {
               {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400" />)}
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 italic leading-relaxed">
-              "The digital escrow protection and milestone updates give us total peace of mind for fragile machinery shipments. SuperFast is leagues ahead of traditional brokers."
+              "The digital escrow protection and milestone updates give us total peace of mind for fragile oilfield machinery shipments between Digboi and Sivasagar. SuperFast is leagues ahead of traditional brokers."
             </p>
             <div className="flex items-center gap-3 pt-2 border-t border-slate-100 dark:border-navy-800">
               <img
                 src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
-                alt="David Chen"
+                alt="Rupam Phukan"
                 className="w-9 h-9 rounded-full object-cover"
               />
               <div>
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white">David Chen</h4>
-                <p className="text-[10px] text-slate-400">Operations VP, Titanium Fabrications</p>
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Rupam Phukan</h4>
+                <p className="text-[10px] text-slate-400">Operations VP, Upper Assam Heavy Machinery</p>
               </div>
             </div>
           </div>
