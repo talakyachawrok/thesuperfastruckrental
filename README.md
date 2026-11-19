@@ -125,13 +125,71 @@ Generates an optimized production bundle in `dist/`.
 
 ---
 
+## 📁 Project Architecture & Restructured Organization
+
+```text
+superfast/
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── data/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── types/
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   └── index.css
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── tailwind.config.js
+│   ├── postcss.config.js
+│   └── tsconfig.json
+│
+├── backend/
+│   ├── config/
+│   │   ├── db.ts
+│   │   └── dnsFallback.ts
+│   ├── models/
+│   │   ├── User.ts
+│   │   ├── Truck.ts
+│   │   ├── LoadRequest.ts
+│   │   ├── DriverOffer.ts
+│   │   ├── Booking.ts
+│   │   ├── Payment.ts
+│   │   ├── Notification.ts
+│   │   └── Review.ts
+│   ├── controllers/
+│   ├── routes/
+│   ├── middleware/
+│   ├── utils/
+│   ├── package.json
+│   ├── server.ts
+│   └── server.js
+│
+├── api/
+│   └── index.ts               # Vercel Serverless Function entry point
+├── .gitignore
+├── .env                       # Local secrets (excluded from Git)
+├── package.json               # Monorepo orchestration scripts
+├── vercel.json                # Vercel full-stack serverless deployment configuration
+└── README.md
+```
+
+---
+
 ## ☁️ Deployment to Vercel (Full-Stack)
 
-The repository includes `vercel.json` and `api/index.ts` configured for full-stack serverless deployment on Vercel:
+The repository includes `vercel.json` and `api/index.ts` configured for full-stack deployment on Vercel:
 
 ```json
 {
   "version": 2,
+  "buildCommand": "npm run build --prefix frontend",
+  "outputDirectory": "frontend/dist",
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -154,7 +212,7 @@ In your **Vercel Project Dashboard** ➔ **Settings** ➔ **Environment Variable
 
 ## 🛠️ Backend Architecture & Endpoints
 
-- **Database Models (`server/models/`)**:
+- **Database Models (`backend/models/`)**:
   - `User`: Customers, Drivers, Fleet Owners, Admins with hashed passwords and roles.
   - `Truck`: Assam-registered vehicles (`AS-23-...`), capacity specs, return-route deals.
   - `LoadRequest`: Freight consignments with categories, weights, and urgency.

@@ -4,11 +4,14 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -k -n \"CLIENT,SERVER\" -c \"cyan,magenta\" \"vite\" \"tsx server/index.ts\"",
-    "dev:client": "vite",
-    "dev:server": "tsx server/index.ts",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "concurrently -k -n \"FRONTEND,BACKEND\" -c \"cyan,magenta\" \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "build": "npm run build --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend",
+    "preview": "npm run preview --prefix frontend",
+    "start": "npm run start --prefix backend",
+    "test:db": "npm run test:db --prefix backend"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

@@ -1,9 +1,12 @@
 import './dnsFallback';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import path from 'path';
 
-// Load environment variables
+// Load environment variables from cwd, root .env, or backend .env
 dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 /**
  * Global connection cache for serverless environments (Vercel)
