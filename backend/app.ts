@@ -34,7 +34,17 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Health & Diagnostics Route
+// Root & Health Diagnostics Routes
+app.get('/', (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    platform: 'SuperFast Truck Rental & Logistics Marketplace',
+    serviceRegion: 'Assam, India',
+    status: 'online',
+    health: '/api/health',
+  });
+});
+
 app.get('/api/health', (req: Request, res: Response) => {
   const connected = isDBConnected();
   const uriConfigured = Boolean(
